@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    {% load static from staticfiles %}
+    <script src="{% static 'jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+</head>
+<body>
+    <h1>测试页面</h1>
+
+    {% csrf_token %}
+    <button id="send_btn">点击发送ajax请求</button>
+    <button id="error_data">点击发送错误json消息</button>
+    <button id="send_post">点击发送post请求</button>
+
+    <script type="text/javascript">
+        $("#send_btn").click(function (){
+            var url = "/show/test_json/";
+            var token = $("input[name='csrfmiddlewaretoken']").val();
+            var data = {
+                "list": [1,2],
+                "name": "xxx",
+                "text": "中国人",
+                "csrfmiddlewaretoken": token
+            };
+
+            $.ajax({
+                url: url,
+                data: JSON.stringify(data),
+                headers: {"X-CSRFtoken": $.cookie("csrftoken")},
+                type: "POST",
+                contentType : "application/json",
+                dataType: "text",
+                traditional: true,
+                success: function(data) {
+                    console.log(data);
+                    console.log(JSON.parse(data));
+
+                },
+                error: function (data) {
+                    console.log(JSON.parse(data));
+                }
+            });
+
+        });
+
+        $("#error_data").click(function (){
+            var url = "/show/test_json/";
+            var data = {
+                "list": [1,2],
+                "name": "xxx",
+                "text": "中国人"
+            };
+
+            $.ajax({
+                url: url,
+                data: data,
+                type: "POST",
+                headers: {"X-CSRFtoken": $.cookie("csrftoken")},
+                contentType : "application/json",
+                traditional: true,
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+        $("#send_post").click(function(){
+            var url = "/show/test_json/";
+            var token = $("input[name='csrfmiddlewaretoken']").val();
+            var data = {
+                "list": [1,2],
+                "name": "xxx",
+                "text": "中国人",
+                "csrfmiddlewaretoken": token
+            };
+
+            $.post(url, data, function(data){
+                console.log(data);
+            });
+        });
+
+    </script>
+</body>
+</html>
