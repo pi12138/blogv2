@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.comment',
     'apps.message_board',
     'apps.user_statistics',
+    'apps.upload_file',
     'rest_framework',
     'debug_toolbar',
 ]
@@ -173,3 +174,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 7,
 }
+
+
+from .local_settings import AK, AKS, QINIU_AK, QINIU_SK

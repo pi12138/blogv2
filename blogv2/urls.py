@@ -25,6 +25,7 @@ urlpatterns = [
     path('comment/', include('apps.comment.urls')),
     path('message_board/', include('apps.message_board.urls')),
     path('user_statistics/', include('apps.user_statistics.urls')),
+    path('upload_file/', include('apps.upload_file.urls')),
 ]
 
 

@@ -57,3 +57,23 @@ def test_response(request):
     print(response.getvalue())
 
     return response
+
+
+@csrf_exempt
+def upload_file(request):
+    """
+    測試上傳文件到阿里雲oss
+    """
+    if request.method == "GET":
+        return render(request, 'upload_file.html')
+    elif request.method == "POST":
+        from apps.upload_file.helper import QiniuOSS
+
+        file = request.FILES['file']
+
+        bucket = "upload"
+
+        oss = QiniuOSS(bucket)
+        oss.upload_file(file)        
+        
+        return HttpResponse("ok")
