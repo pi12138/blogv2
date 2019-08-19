@@ -20,12 +20,16 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('blogv2/', include('apps.article.urls')),
     path('show/', include('apps.show.urls')),
-    path('comment/', include('apps.comment.urls')),
-    path('message_board/', include('apps.message_board.urls')),
-    path('user_statistics/', include('apps.user_statistics.urls')),
-    path('upload_file/', include('apps.upload_file.urls')),
+]
+
+# api
+urlpatterns += [
+    path('api/comment/', include('apps.comment.urls')),
+    path('api/blogv2/', include('apps.article.urls')),
+    path('api/message_board/', include('apps.message_board.urls')),
+    path('api/user_statistics/', include('apps.user_statistics.urls')),
+    path('api/upload_file/', include('apps.upload_file.urls')),
 ]
 
 
