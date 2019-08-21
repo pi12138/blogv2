@@ -31,7 +31,7 @@ def article_read_count(request):
     if not article:
         return Response("为传入文章ID")
 
-    path = "/blogv2/articles/{}/".format(article)
+    path = "/api/blogv2/articles/{}/".format(article)
 
     users = UserInterviewInfo.objects.filter(interview_url=path)
     

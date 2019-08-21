@@ -12,4 +12,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     url(r'^article_archive/$', views.ArticleArchiveView.as_view()),
+    url(r'^the_latest_article/$', views.the_latest_article),
 ]

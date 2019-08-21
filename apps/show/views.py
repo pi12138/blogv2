@@ -5,14 +5,21 @@ from apps.article.models import Article
 import json
 # Create your views here.
 
+def hello(request):
+    return render(request, 'hello.html')
 
-def article(request):
-    return render(request, 'article.html')
-
+def article(request, pk):
+    return render(request, 'article.html', {'pk': pk})
 
 def index(request):
     return render(request, 'index.html')
 
+def search(request):
+    kw = request.POST.get('keyword', "")
+    return render(request, 'search.html', {'keyword': kw})
+
+def archive(request):
+    return render(request, 'archive.html')
 
 def test(request):
     return render(request, 'test.html')
