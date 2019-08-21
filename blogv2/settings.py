@@ -173,7 +173,8 @@ DEBUG_TOOLBAR_CONFIG = {
 """
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    "DEFAULT_PAGINATION_CLASS": "utils.pagination.CustomPagination",
     'PAGE_SIZE': 7,
 }
 

@@ -140,9 +140,11 @@ class ArticleCategoryViewSet(viewsets.ModelViewSet):
 
         category_list = list()
         for category in categorys:
-            article_num = category.article_set.all().count()
+            articles = category.article_set.all()
+            article_num = articles.count()
+            ser = serializers.IndexSerializer(instance=articles, many=True) 
 
-            category_info = (category.id, category.name, article_num)
+            category_info = (category.id, category.name, article_num, ser.data)
             category_list.append(category_info)
 
         return Response(category_list)
@@ -200,8 +202,10 @@ class ArticleArchiveView(views.APIView):
         for date in dates:
             date_str = date.strftime("%Y-%m")
             year, month = date_str.split('-')
-            count = models.Article.objects.filter(update_time__year=year, update_time__month=month).count()
-            date_list.append((date_str, count))
+            articles = models.Article.objects.filter(update_time__year=year, update_time__month=month)
+            count = articles.count()            
+            ser = serializers.IndexSerializer(instance=articles, many=True)
+            date_list.append((date_str, count, ser.data))
         
         return date_list
 
