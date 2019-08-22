@@ -26,6 +26,7 @@ def message_board(request):
 
 def user_statistics(request):
     return render(request, 'user_statistics.html')
+    
 def test(request):
     return render(request, 'test.html')
 

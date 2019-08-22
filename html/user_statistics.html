@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>主页</title>
+    <title>访问统计</title>
     <script src="../static/jquery-1.12.4.min.js"></script>
     <link rel="stylesheet" href="../static/bootstrap-3.3.7-dist/css/bootstrap.css">
     <script src="../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
@@ -42,9 +42,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/hello/">欢迎</a></li>
-                    <li class="active"><a href="/index/">主页</a></li>
+                    <li><a href="/index/">主页</a></li>
                     <li><a href="/archive/">归档</a></li>
-
+                    <li><a href="/message_board/">留言板</a></li>
+                    <li class="active"><a href="/user_statistics/">访问统计</a></li>
                 </ul>
                 <form class="navbar-form navbar-right" role="search" id="search_bar" action="/search/" method="POST">
                     {% csrf_token %}
@@ -58,130 +59,152 @@
         </nav>
 
         {% verbatim %}
-        <!-- 左边的容器 -->
-        <div class="container col-sm-4">
-            <div class="row">
-                <div class="col-sm-10">
-                    <a href="#" class="thumbnail">
-                        <img src="../static/image/4.jpeg" alt="..." style="height: 200px; width: 100%;">
-                    </a>
-                </div>
-                <h2 id="name" class="col-sm-10">Zhou Youpeng
-                    <br>
-                    <small>pipipipipip</small>
-                    <br>
-                    <small>纸上得来终觉浅，绝知此事要躬行。</small>
-                </h2>
-                <h3></h3>
 
-                <ul class="list-group col-sm-10" id="info">
-                    <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i> Suzhou</li>
-                    <a class="list-group-item" href="https://github.com/pi12138">
-                        <i class="fa fa-github" aria-hidden="true"></i> https://github.com/pi12138
-                    </a>
-                    <li class="list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i> 1558255789@qq.com</li>
+        <!-- 页面内容 -->
+        <div class="row" id="statistics">
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge" v-text="count">14</span> 网站的总访问次数
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge" v-text="today_count">14</span> 今天网站被访问的次数
+                    </li>
                 </ul>
-                <h4 class="col-sm-10"></h4>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge" v-text="IP_count">14</span> 访问过网站的总IP个数
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge" v-text="today_IP_count">14</span> 今天访问网站的IP个数
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">访问之最<span class="label label-default"></span></h3>
+                    </div>
+                    <div class="panel-body" v-for="ip in hot_ip_list">
+                        <div v-cloak>{{ ip.ip }} <span class="label label-default pull-right" v-text="ip.count"></span></div>
 
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 右边的容器 -->
-        <div class="container col-sm-8" id="articles">
-            <!-- 内容列表 -->
-            <div class="row">
+        <div class="row clearfix" id="article">
+            <div class="col-md-5 column">
+                <div class="panel-group" id="panel-953993">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-953993" href="#panel-element-967575">今日被查看的文章</a>
+                            <span class="label label-default pull-right" v-text="count">Label</span>
+                        </div>
+                        <div id="panel-element-967575" class="panel-collapse collapse">
+                            <div class="panel-body" v-for="article in article_url_list" v-cloak>
+                                <a v-bind:href="'/article/' + article.id + '/'" v-text="article.title"></a>
+                                <span class="label label-default pull-right" v-text="article.count">Label</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-953993" href="#panel-element-344909">Collapsible Group Item #2</a>
+                        </div>
+                        <div id="panel-element-344909" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Anim pariatur cliche...
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5 column" id="article_list">
                 <div class="list-group">
-                    <a class="list-group-item" v-for="article in article_list" v-bind:href="'/article/' + article.id + '/'">
-                        <h3 class="list-group-item-heading" v-text="article.title"></h3>
-                        <p class="list-group-item-text">
-                            <span class="label label-default" v-text="article.category_name">category</span>
-                            <span class="label label-default" v-text="article.update_time">update</span>
-                            <span class="label label-default" v-text="'阅读数：'+article.article_read_number">read</span>
-                            <span class="label label-default" v-text="'评论数：'+article.article_comment_number">read</span>
-                        </p>
+                    <a href="#" class="list-group-item disabled">热门文章</a>
+                    <a v-bind:href="'/article/' + art.id + '/'" class="list-group-item" v-for="art in hot_article_list" v-cloak>
+                        <span class="badge">{{ art.read_number }}</span> {{ art.title }}
                     </a>
                 </div>
-
-            </div>
-
-            <!-- 下面翻页 -->
-            <div class="row">
-                <nav aria-label="...">
-                    <ul class="pagination">
-                        <li class=""><a href="#" aria-label="Previous" @click="getCurrentPage(1)"><span aria-hidden="true">&laquo;&laquo;</span></a></li>
-                        <li class=""><a href="#" aria-label="Previous" @click="getPreviousPage"><span aria-hidden="true">&laquo;</span></a></li>
-                        <li v-for="num in num_page_list"><a href="#" @click="getCurrentPage(num)" v-cloak>{{ num }}</a></li>
-                        <li class=""><a href="#" aria-label="Next" @click="getNextPage"><span aria-hidden="true">&raquo;</span></a></li>
-                        <li class=""><a href="#" aria-label="Next" @click="getCurrentPage(num_pages)"><span aria-hidden="true">&raquo;&raquo;</span></a></li>
-                    </ul>
-                    <ul class="pagination pull-right">
-                        <li class="pull-right"><a>一共{{ num_pages }}页，当前在 {{ num_page }} 页</a></li>
-                    </ul>
-                </nav>
             </div>
         </div>
+        {% endverbatim %}
     </div>
-    {% endverbatim %}
 
     <script type="text/javascript">
-        var articles = new Vue({
-            el: "#articles",
+        var statistics = new Vue({
+            el: "#statistics",
             data: {
-                article_list: [],
-                previous_url: "",
-                next_url: "",
                 count: 0,
-                url: '/api/blogv2/articles/',
-                num_page_list: [],
-                num_page: 0,
-                num_pages: 0
+                IP_count: 0,
+                today_count: 0,
+                today_IP_count: 0,
+                hot_ip_list: []
             },
             methods: {
-                getArticleList(url) {
-                    this.$http.get(url).then(response => {
-                        console.log(response);
-                        this.article_list = response.body.results;
-                        this.previous_url = response.body.previous;
-                        this.next_url = response.body.next;
-                        this.count = response.body.count;
-                        this.num_page_list = response.body.num_page_list;
-                        this.num_page = response.body.number;
-                        this.num_pages = response.body.num_pages;
+                getStatistics() { // 获取网站访问次数
+                    var prefix = '/api/user_statistics/';
+                    var url1 = prefix + 'interview_count/';
+                    var url2 = prefix + 'one_day_visits/';
+                    var url3 = prefix + 'hot_ip/';
 
-                    }, error => {
-                        console.log("获取文章列表失败")
+                    this.$http.get(url1).then(res => {
+                        this.count = res.body.count;
+                        this.IP_count = res.body.IP_count;
+                    })
+
+                    this.$http.get(url2).then(res => {
+                        this.today_count = res.body.count;
+                        this.today_IP_count = res.body.IP_count;
+                    })
+
+                    this.$http.get(url3).then(res => {
+                        this.hot_ip_list = res.body;
+                    })
+                }
+            },
+
+            created() {
+                this.getStatistics()
+            },
+        })
+
+        var article = new Vue({
+            el: "#article",
+            data: {
+                count: 0,
+                article_url_list: [],
+                hot_article_list: []
+            },
+            methods: {
+                getArticleInfo() { // 获取文章访问信息
+                    var url = '/api/user_statistics/today_read_article/';
+
+                    this.$http.get(url).then(res => {
+                        this.count = res.body.length;
+                        this.article_url_list = res.body;
+                        console.log(res.body)
                     })
                 },
 
-                getPreviousPage() {
-                    if (this.previous_url != null) {
-                        this.getArticleList(this.previous_url);
-                    } else {
-                        alert("当前是首页");
-                        return
-                    }
+                getHotArticle() { // 获取最热门（阅读数）的文章
+                    var url = '/api/blogv2/articles/hot_article/';
+
+                    this.$http.get(url).then(response => {
+                        this.hot_article_list = response.body;
+                    }, error => {
+                        console.log("获取最热门文章出错！");
+                    })
                 },
-
-                getNextPage() { // 获取下一页数据
-                    if (this.next_url != null) {
-                        this.getArticleList(this.next_url);
-                    } else {
-                        alert("当前是尾页");
-                        return
-                    }
-                },
-
-                getCurrentPage(num) { // 获取当前页数据
-                    var url = 'http://127.0.0.1:8000/api/blogv2/articles/?page=' + num
-                    this.getArticleList(url);
-
-                    this.currentPage(num);
-                },
-
             },
+
             created() {
-                this.getArticleList(this.url);
-            },
+                this.getArticleInfo();
+                this.getHotArticle();
+            }
         })
     </script>
 </body>
