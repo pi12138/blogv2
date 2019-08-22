@@ -38,8 +38,8 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/hello/">欢迎</a></li>
                     <li><a href="/index/">主页</a></li>
-                    <li><a href="/message_board/">留言板</a></li>
                     <li><a href="/archive/">归档</a></li>
+                    <li><a href="/message_board/">留言板</a></li>
                 </ul>
                 <form class="navbar-form navbar-right" role="search" id="search_bar" action="/search/" method="POST">
                     {% csrf_token %}
@@ -62,6 +62,7 @@
                     <div class="list-group-item active">
                         <h3 class="list-group-item-heading">
                             {{ keyword }} 的搜索结果
+                            <span class="label label-default pull-right" v-text="count"></span>
                         </h3>
                     </div>
                     <a class="list-group-item" v-for="article in article_list" v-bind:href="'/article/' + article.id + '/'">
@@ -84,7 +85,8 @@
         var article_list = new Vue({
             el: "#article_list",
             data: {
-                article_list: []
+                article_list: [],
+                count: 0
             },
             methods: {
                 searchResult() { // 获取搜索结果
@@ -96,6 +98,7 @@
                         params: params
                     }).then(response => {
                         this.article_list = response.body;
+                        this.count = this.article_list.length;
                     }, error => {
                         console.log('搜索结果获取失败！');
                     })

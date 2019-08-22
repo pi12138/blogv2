@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^article/(?P<pk>\d+)/$', views.article),
     url(r'^search/$', views.search),
     url(r'^archive/$', views.archive),
-
+    url(r'^message_board/$', views.message_board),
     
     url(r'^test/$', views.test),
     url(r'^test_json/$', views.test_json),

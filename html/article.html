@@ -42,9 +42,8 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/hello/">欢迎</a></li>
                     <li><a href="/index/">主页</a></li>
-                    <li><a href="/message_board/">留言板</a></li>
                     <li><a href="/archive/">归档</a></li>
-
+                    <li><a href="/message_board/">留言板</a></li>
                 </ul>
                 <form class="navbar-form navbar-right" role="search" id="search_bar" action="/search/" method="POST">
                     {% csrf_token %}
@@ -108,9 +107,8 @@
                         <input type="email" name="email" class="form-control col-sm-6" v-model="email" value="email" required="required" title="留下你的邮箱" placeholder="留下你的邮箱">
                     </div>
                     <div class="col-sm-1"></div>
-                    <button type="submit" class="btn btn-primary" v-on:click="submitComment">发送</button>
-                    <div class="col-sm-1"></div>
-                    <button type="button" class="btn btn-default">清空</button>
+                    <button type="submit" class="btn btn-primary" v-on:click.self="submitComment">发送</button>
+                    <button type="button" class="btn btn-default" v-on:dblclick.self="clearContent">双击清空</button>
                 </form>
 
                 <br>
@@ -175,7 +173,7 @@
                     var csrf = $("input[name='csrfmiddlewaretoken']");
 
                     // 简单数据校验
-                    if (this.email === "" | this.email.search("@")) {
+                    if (this.email === "" | this.email.search("@") == -1) {
                         alert("请输入正确邮箱地址。");
                         return
                     }
@@ -192,6 +190,10 @@
                     }, error => {
                         alert("留言失败！")
                     });
+                },
+
+                clearContent(){ // 清空留言栏
+                    this.comment = "";
                 }
 
             },

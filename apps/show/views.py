@@ -21,6 +21,11 @@ def search(request):
 def archive(request):
     return render(request, 'archive.html')
 
+def message_board(request):
+    return render(request, 'message_board.html')
+
+def user_statistics(request):
+    return render(request, 'user_statistics.html')
 def test(request):
     return render(request, 'test.html')
 
