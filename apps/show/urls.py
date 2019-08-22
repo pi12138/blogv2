@@ -11,10 +11,4 @@ urlpatterns = [
     url(r'^message_board/$', views.message_board),
     url(r'^user_statistics/$', views.user_statistics),
 
-    
-    url(r'^test/$', views.test),
-    url(r'^test_json/$', views.test_json),
-    url(r'^test_add/$', views.test_add),
-    url(r'^test_response/$', views.test_response),
-    url(r'^upload_file/$', views.upload_file),
 ]

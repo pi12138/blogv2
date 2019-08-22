@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'apps.comment',
     'apps.message_board',
     'apps.user_statistics',
-    'apps.upload_file',
     'rest_framework',
     'debug_toolbar',
     'corsheaders',    

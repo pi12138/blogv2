@@ -29,7 +29,6 @@ urlpatterns += [
     path('api/blogv2/', include('apps.article.urls')),
     path('api/message_board/', include('apps.message_board.urls')),
     path('api/user_statistics/', include('apps.user_statistics.urls')),
-    path('api/upload_file/', include('apps.upload_file.urls')),
 ]
 
 
