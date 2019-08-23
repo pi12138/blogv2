@@ -33,3 +33,9 @@ class ArticleCategorySerializer(serializers.ModelSerializer):
         model = ArticleCategory
         fields = "__all__"
 
+
+class ArticleSer(serializers.ModelSerializer):
+    # 导数据专用
+    class Meta:
+        model = Article
+        fields = "__all__"
