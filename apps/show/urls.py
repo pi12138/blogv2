@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^hello/$', views.hello),
+    url(r'^$', views.hello),
     url(r'^index/$', views.index),
     url(r'^article/(?P<pk>\d+)/$', views.article),
     url(r'^search/$', views.search),

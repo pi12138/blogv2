@@ -140,7 +140,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
 """
 # log
 LOGGING = {
@@ -208,4 +208,4 @@ CORS_ALLOW_HEADERS = (
 )
 
 
-from .local_settings import AK, AKS, QINIU_AK, QINIU_SK
+# from .local_settings import AK, AKS, QINIU_AK, QINIU_SK
