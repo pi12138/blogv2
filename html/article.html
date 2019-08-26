@@ -25,6 +25,11 @@
         [v-cloak] {
             display: none;
         }
+        
+        th,
+        td {
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -45,7 +50,7 @@
                     <li><a href="/message_board/">留言板</a></li>
                     <li><a href="/archive/">归档</a></li>
 
-                    <li><a href="/user_statistics/">访问统计</a></li>                    
+                    <li><a href="/user_statistics/">访问统计</a></li>
 
                 </ul>
                 <form class="navbar-form navbar-right" role="search" id="search_bar" action="/search/" method="POST">
@@ -150,7 +155,9 @@
 
                         document.title = this.article.title;
                         var content = this.article.content;
-                        var converter = new showdown.Converter();
+                        var converter = new showdown.Converter({
+                            tables: true
+                        });
 
                         this.content = converter.makeHtml(content);
                         // this.comment_list = this.article.comment;
@@ -196,7 +203,7 @@
                     });
                 },
 
-                clearContent(){ // 清空留言栏
+                clearContent() { // 清空留言栏
                     this.comment = "";
                 }
 
