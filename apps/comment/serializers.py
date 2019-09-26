@@ -11,5 +11,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'content', 'pub_date', 'article')
         extra_kwargs = {
             # 'email': {'read_only': True}
+            'pub_date': {'format': '%Y-%m-%d %H:%M:%S'}
         }
 

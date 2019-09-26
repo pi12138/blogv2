@@ -13,7 +13,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     """
     文章视图
     """
-    queryset = models.Article.objects.all()
+    queryset = models.Article.objects.all().order_by('-update_time')
     serializer_class = serializers.ArticleSerializer
 
     @action(methods=['get'], detail=False)
@@ -24,23 +24,83 @@ class ArticleViewSet(viewsets.ModelViewSet):
         if not keyword:
             return Response("未传入关键字！")
 
-        articles = self.queryset.filter(Q(title__icontains=keyword)|Q(category__icontains=keyword))
-        ser = serializers.IndexSerializer(instance=articles, many=True)
+        articles = self.queryset.filter(Q(title__icontains=keyword)|Q(category__name__icontains=keyword))
+        ser = serializers.ArticleSerializer(instance=articles, many=True)
 
         return Response(ser.data)
 
     @action(methods=['get'], detail=False)
     def similar_article(self, request):
         """相似的文章"""
-        category = request.query_params.get('category', "")
+        pk = request.query_params.get('article_id', "")
 
-        if not category:
-            return Response("未传入分类！")
+        if not pk:
+            return Response("未传入文章ID！")
 
-        articles = self.queryset.filter(Q(title__icontains=category)|Q(category__icontains=category))[0:10]
-        ser = serializers.IndexSerializer(instance=articles, many=True)
+        articles = models.Article.objects.filter(pk=pk)
 
-        return Response(ser.data)
+        if not articles.exists():
+            return Response("该文章不存在")
+
+        category = articles[0].category
+        print("category: {}".format(category))
+        articles = models.Article.objects.filter(Q(title__icontains=category)|Q(category__name__icontains=category)).exclude(id=pk)
+
+        num = articles.count()
+        if num > 5:
+            num = 5
+
+        article_list = list()
+        for art in articles[:num]:
+            article_info = dict()
+            article_info['id'] = art.id
+            article_info['title'] = art.title
+            article_info['read_number'] = art.article_read_number()
+            article_list.append(article_info) 
+        article_list.sort(key=lambda x:x['read_number'], reverse=True)
+
+        return Response(article_list)
+
+    @action(methods=['get'], detail=False)
+    def latest_article(self, request):
+        """最新的文章"""
+        articles = self.queryset
+        num = articles.count()
+
+        if num > 5:
+            num = 5
+
+        article_list = list()
+        for art in articles[0:num]:
+            article_info = dict()
+            article_info['id'] = art.id
+            article_info['title'] = art.title
+            article_info['read_number'] = art.article_read_number()
+            article_list.append(article_info)
+        article_list.sort(key=lambda x:x['read_number'], reverse=True)
+
+        return Response(article_list)
+
+    @action(methods=['get'], detail=False)
+    def hot_article(self, request):
+        """最热门的文章"""
+        articles = self.queryset
+        num = articles.count()
+
+        if num > 5:
+            num = 5
+        
+        article_list = list()
+        for art in articles:
+            article_info = dict()
+            article_info['id'] = art.id
+            article_info['title'] = art.title
+            article_info['read_number'] = int(art.article_read_number())
+            article_list.append(article_info)
+
+        article_list.sort(key=lambda x:x['read_number'], reverse=True)
+        
+        return Response(article_list[0:num])
 
 
 class IndexViewSet(viewsets.ModelViewSet):
@@ -80,9 +140,11 @@ class ArticleCategoryViewSet(viewsets.ModelViewSet):
 
         category_list = list()
         for category in categorys:
-            article_num = category.article_set.all().count()
+            articles = category.article_set.all()
+            article_num = articles.count()
+            ser = serializers.IndexSerializer(instance=articles, many=True) 
 
-            category_info = (category.id, category.name, article_num)
+            category_info = (category.id, category.name, article_num, ser.data)
             category_list.append(category_info)
 
         return Response(category_list)
@@ -140,8 +202,10 @@ class ArticleArchiveView(views.APIView):
         for date in dates:
             date_str = date.strftime("%Y-%m")
             year, month = date_str.split('-')
-            count = models.Article.objects.filter(update_time__year=year, update_time__month=month).count()
-            date_list.append((date_str, count))
+            articles = models.Article.objects.filter(update_time__year=year, update_time__month=month)
+            count = articles.count()            
+            ser = serializers.IndexSerializer(instance=articles, many=True)
+            date_list.append((date_str, count, ser.data))
         
         return date_list
 
@@ -159,3 +223,31 @@ class ArticleArchiveView(views.APIView):
         return ser.data
 
 
+@api_view(http_method_names=['GET'])
+def the_latest_article(request, num=3):
+    """
+    获取最新的几篇文章的文章标题、文章摘要、文章的url
+    """
+    try:
+        num = int(num)
+    except Exception as e:
+        print("the latest article error: {}".format(e))
+        return Response("传入数据有误")
+
+    articles = models.Article.objects.all()
+    count = articles.count()
+
+    if num > count:
+        num = count
+
+    articles = articles.order_by('-update_time')[:num]
+    
+    article_list = list()
+    for art in articles:
+        article_info = dict()
+        article_info['title'] = art.title
+        article_info['id'] = art.id
+        article_info['content'] = art.content[:200].replace("#", "") if art.content else ""
+        article_list.append(article_info)
+
+    return Response(article_list)

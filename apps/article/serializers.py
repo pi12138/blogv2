@@ -5,29 +5,27 @@ from apps.comment.serializers import CommentSerializer
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    comment = serializers.SerializerMethodField(method_name="get_comment")
     category_name = serializers.CharField(source='category.name', read_only=True)
 
     class Meta:
         model = Article
-        fields = ('id', 'title', 'category', 'category_name', 'pub_date', 'update_time', 'content', 'comment')
-        extra_kwargs = {'category': {'write_only': True}}
-
-    def get_comment(self, obj):
-        comments = Comment.objects.filter(article_id=obj.id)
-        ser = CommentSerializer(instance=comments, many=True)
-        return ser.data
+        fields = ('id', 'title', 'category', 'category_name', 'pub_date', 'update_time', 'content',
+        'article_read_number', 'article_comment_number')
+        extra_kwargs = {
+            'category': {'write_only': True},
+            'update_time': {'format': "%Y-%m-%d %H:%M:%S"},
+            'pub_date': {'format': '%Y-%m-%d %H:%M:%S'},
+        }
 
 
 class IndexSerializer(serializers.ModelSerializer):
-    article_url = serializers.CharField(read_only=True)
-    category_name = serializers.CharField(read_only=True)
-    update_time_handler = serializers.CharField(read_only=True)
-
     class Meta:
         model = Article
-        fields = ('title', 'category_name', 'update_time_handler', 'article_url')
-        extra_kwargs = {'title': {'read_only': True}}
+        fields = ('title', 'category_name', 'update_time', 'id')
+        extra_kwargs = {
+            'title': {'read_only': True},
+            'update_time': {'format': '%Y-%m-%d %H:%M:%S'}    
+        }
 
 
 class ArticleCategorySerializer(serializers.ModelSerializer):
@@ -35,3 +33,9 @@ class ArticleCategorySerializer(serializers.ModelSerializer):
         model = ArticleCategory
         fields = "__all__"
 
+
+class ArticleSer(serializers.ModelSerializer):
+    # 导数据专用
+    class Meta:
+        model = Article
+        fields = "__all__"

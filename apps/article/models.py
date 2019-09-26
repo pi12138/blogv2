@@ -1,5 +1,5 @@
 from django.db import models
-
+from apps.user_statistics.models import UserInterviewInfo
 # Create your models here.
 
 
@@ -20,13 +20,23 @@ class Article(models.Model):
         verbose_name_plural = verbose_name
 
     def article_url(self):
-        return "http://127.0.0.1:8000/blogv2/articles/{}/".format(self.pk)
+        return "http://127.0.0.1:8000/api/blogv2/articles/{}/".format(self.pk)
     
     def category_name(self):
         return self.category.name
 
     def update_time_handler(self):
         return self.update_time.strftime("%Y-%m-%d")
+
+    def article_read_number(self):
+        url = "/api/blogv2/articles/{}/".format(self.pk)
+        number = UserInterviewInfo.objects.filter(interview_url=url).count()
+        return number
+    
+    def article_comment_number(self):
+        number = self.comment_set.all().count()
+        return number
+
 
 class ArticleCategory(models.Model):
     """博文文章标签"""

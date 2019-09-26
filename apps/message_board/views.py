@@ -10,18 +10,18 @@ from .serializers import MessageBoardSerializer
 
 
 class MessageBoardViewSet(ModelViewSet):
-    queryset = MessageBoardModel.objects.all()
+    queryset = MessageBoardModel.objects.all().order_by('-pub_date')
     serializer_class = MessageBoardSerializer
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     
-    @csrf_exempt
-    def create(self, request, *args, **kwargs):
-        form_obj = MessageBoardModelForm(request.data)
-        print(form_obj)
-        if form_obj.is_valid():
-            form_obj.save()
-        else:
-            return Response(form_obj.errors)
-        return Response(form_obj.cleaned_data)
+    # @csrf_exempt
+    # def create(self, request, *args, **kwargs):
+    #     form_obj = MessageBoardModelForm(request.data)
+    #     print(form_obj)
+    #     if form_obj.is_valid():
+    #         form_obj.save()
+    #     else:
+    #         return Response(form_obj.errors)
+    #     return Response(form_obj.cleaned_data)
