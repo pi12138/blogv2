@@ -19,7 +19,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         if not article_id:
             return Response("未传入文章ID")
 
-        comments = self.get_queryset().filter(article_id=article_id)
+        comments = self.get_queryset().filter(article_id=article_id).order_by('-pub_date')
         ser = serializers.CommentSerializer(instance=comments, many=True)
 
         return Response(ser.data)

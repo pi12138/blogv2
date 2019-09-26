@@ -1,0 +1,11 @@
+*.pyc
+*.xml
+local_settings.py
+
+data.json
+set_data.py
+uwsgi.ini
+uwsgi.pid
+uwsgi.log
+
+collect_static/
