@@ -13,3 +13,5 @@ collect_static/
 .idea/
 .vscode/
 debug.log
+
+__pycache__/
