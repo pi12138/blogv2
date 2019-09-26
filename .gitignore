@@ -9,3 +9,5 @@ uwsgi.pid
 uwsgi.log
 
 collect_static/
+
+.idea/
