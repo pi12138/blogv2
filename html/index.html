@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pipipip的个人博客</title>
+    <!-- <title>Pipipip的个人博客</title> -->
+    <title></title>
     <script src="../static/jquery-1.12.4.min.js"></script>
     <link rel="stylesheet" href="../static/bootstrap-3.3.7-dist/css/bootstrap.css">
     <script src="../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
@@ -61,27 +62,27 @@
 
         {% verbatim %}
         <!-- 左边的容器 -->
-        <div class="container col-sm-4">
+        <div class="container col-sm-4" id="userinfo">
             <div class="row">
                 <div class="col-sm-10">
                     <a href="#" class="thumbnail">
-                        <img src="../static/image/4.jpeg" alt="..." style="height: 200px; width: 100%;">
+                        <img v-bind:src="'/'+avatar" alt="..." style="height: 200px; width: 100%;">
                     </a>
                 </div>
-                <h2 id="name" class="col-sm-10">Zhou Youpeng
+                <h2 id="name" class="col-sm-10" v-cloak>{{ name }}
                     <br>
-                    <small>pipipipipip</small>
+                    <small>{{ nickname }}</small>
                     <br>
-                    <small>纸上得来终觉浅，绝知此事要躬行。</small>
+                    <small>{{ words }}</small>
                 </h2>
                 <h3></h3>
 
-                <ul class="list-group col-sm-10" id="info">
-                    <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i> Suzhou</li>
-                    <a class="list-group-item" href="https://github.com/pi12138">
-                        <i class="fa fa-github" aria-hidden="true"></i> https://github.com/pi12138
+                <ul class="list-group col-sm-10" id="info" v-cloak>
+                    <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i> {{ location }}</li>
+                    <a class="list-group-item" v-bind:href="github" target="_blank">
+                        <i class="fa fa-github" aria-hidden="true"></i> {{ github }}
                     </a>
-                    <li class="list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i> 1558255789@qq.com</li>
+                    <li class="list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ email }}</li>
                 </ul>
                 <h4 class="col-sm-10"></h4>
 
@@ -141,7 +142,7 @@
             methods: {
                 getArticleList(url) {
                     this.$http.get(url).then(response => {
-                        console.log(response);
+                        // console.log(response);
                         this.article_list = response.body.results;
                         this.previous_url = response.body.previous;
                         this.next_url = response.body.next;
@@ -183,6 +184,48 @@
             created() {
                 this.getArticleList(this.url);
             },
+        })
+
+        var userinfo = new Vue({
+            el: "#userinfo",
+            data: {
+                name: '',
+                nickname: '',
+                github: "",
+                email: '',
+                words: '',
+                avatar: '',
+                location: "",
+            },
+            methods: {
+                setTitle(){
+                    document.title = this.nickname+"的个人博客";                    
+                },
+
+                getUserInfo(){
+                    let url = '/api/userinfo/userinfo/';
+                    this.$http.get(url).then(response => {
+                        console.log(response);
+                        this.name = response.body.name;
+                        this.nickname = response.body.nickname;
+                        this.github = response.body.github;
+                        this.email = response.body.email;
+                        this.words = response.body.words;
+                        this.avatar = response.body.avatar;
+                        this.location = response.body.location;
+
+                        this.setTitle();                
+
+                    }, error => {
+                        console.log("获取用户信息失败！");
+                    });
+                    
+                },    
+
+            },
+            created(){
+                this.getUserInfo();
+            }
         })
     </script>
 </body>

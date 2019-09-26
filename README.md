@@ -9,6 +9,7 @@
 - comment 文章评论app
 - message_board 站点留言板app
 - user_statistics 用户统计app
+- userinfo 个人信息app
 
 ## 主要技术
 
