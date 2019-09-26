@@ -12,3 +12,4 @@ collect_static/
 
 .idea/
 .vscode/
+debug.log
