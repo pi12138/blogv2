@@ -11,3 +11,4 @@ uwsgi.log
 collect_static/
 
 .idea/
+.vscode/
