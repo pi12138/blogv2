@@ -1,6 +1,7 @@
 *.pyc
 *.xml
 local_settings.py
+settings.py
 
 data.json
 set_data.py
