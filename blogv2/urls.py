@@ -17,10 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.show.urls')),
+    path('media/', include('apps.mediafile.urls')),
 ]
 
 # api
