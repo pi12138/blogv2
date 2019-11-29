@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'apps.userinfo',
     'rest_framework',
     'debug_toolbar',
-    'corsheaders',    
+    'corsheaders',
+    'apps.mediafile',    
 ]
 
 MIDDLEWARE = [
@@ -142,6 +143,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'media'),
 ]
 
 """
@@ -221,3 +223,6 @@ CORS_ALLOW_HEADERS = (
 
 # from .local_settings import AK, AKS, QINIU_AK, QINIU_SK
 from .local_settings import DATABASES
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
