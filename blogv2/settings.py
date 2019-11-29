@@ -220,4 +220,4 @@ CORS_ALLOW_HEADERS = (
 
 
 # from .local_settings import AK, AKS, QINIU_AK, QINIU_SK
-# from .local_settings import DATABASES
+from .local_settings import DATABASES
