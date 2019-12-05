@@ -19,4 +19,6 @@ __pycache__/
 
 monitor/config.py
 
-celerybeat-*
+celerybeat-schedule.bak
+celerybeat-schedule.dat 
+celerybeat-schedule.dir
