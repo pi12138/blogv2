@@ -10,6 +10,11 @@
 - message_board 站点留言板app
 - user_statistics 用户统计app
 - userinfo 个人信息app
+- monitor 不是一个app，利用celery用来监控网站是否运行，如果未运行发送邮件到指定邮箱
+
+## 项目启动
+
+- 启动celery `celery -B -A monitor worker -l info`
 
 ## 主要技术
 
